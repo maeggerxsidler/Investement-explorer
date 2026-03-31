@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Investitionsberater</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      text-align: center;
+      padding: 40px;
+    }
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      margin: 10px;
+      padding: 10px;
+      width: 80%;
+    }
+    button {
+      background: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>💰 Investitionsberater</h2>
+
+  <input type="number" id="age" placeholder="Alter">
+  <input type="number" id="income" placeholder="Monatseinkommen (CHF)">
+  <input type="number" id="save" placeholder="Sparbetrag pro Monat (CHF)">
+
+  <select id="risk">
+    <option value="">Risikobereitschaft</option>
+    <option value="low">Tief</option>
+    <option value="medium">Mittel</option>
+    <option value="high">Hoch</option>
+  </select>
+
+  <input type="number" id="years" placeholder="Anlagehorizont (Jahre)">
+
+  <button onclick="calculate()">Empfehlung anzeigen</button>
+
+  <div id="result"></div>
+</div>
+
+<script>
+function calculate() {
+  let age = document.getElementById("age").value;
+  let save = document.getElementById("save").value;
+  let risk = document.getElementById("risk").value;
+  let years = document.getElementById("years").value;
+
+  let result = "";
+
+  if (risk === "high" && years >= 5) {
+    result = "👉 Empfehlung: ETF (z. B. MSCI World)\nGute Renditechancen bei langfristiger Anlage.";
+  } 
+  else if (risk === "medium") {
+    result = "👉 Empfehlung: Mischung aus ETF + Sparkonto\nAusgewogen zwischen Risiko und Sicherheit.";
+  } 
+  else {
+    result = "👉 Empfehlung: Sparkonto\nSicher, aber geringere Rendite.";
+  }
+
+  document.getElementById("result").innerText = result;
+}
+</script>
+
+</body>
+</html>

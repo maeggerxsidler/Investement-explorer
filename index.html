@@ -1,86 +1,371 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Investitionsberater</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      text-align: center;
-      padding: 40px;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 30px;
+      color: #222;
     }
-    .box {
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
       background: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     }
-    input, select, button {
-      margin: 10px;
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    p.intro {
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
       padding: 10px;
-      width: 80%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 14px;
     }
+
     button {
-      background: black;
-      color: white;
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
       border: none;
+      border-radius: 10px;
+      background: #111;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
     }
-    #result {
+
+    button:hover {
+      background: #333;
+    }
+
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8fafc;
+      border-left: 5px solid #111;
+      border-radius: 10px;
+      display: none;
+      white-space: pre-line;
+    }
+
+    .result h2 {
+      margin-top: 0;
+    }
+
+    .note {
       margin-top: 20px;
-      font-weight: bold;
+      font-size: 13px;
+      color: #666;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-
 <body>
+  <div class="container">
+    <h1>Investitionsberater</h1>
+    <p class="intro">
+      Die WebApp gibt eine einfache Empfehlung für passende Investitionen.
+    </p>
 
-<div class="box">
-  <h2>💰 Investitionsberater</h2>
+    <div class="grid">
+      <div>
+        <label for="age">Alter</label>
+        <input type="number" id="age" placeholder="z. B. 18" />
+      </div>
 
-  <input type="number" id="age" placeholder="Alter">
-  <input type="number" id="income" placeholder="Monatseinkommen (CHF)">
-  <input type="number" id="save" placeholder="Sparbetrag pro Monat (CHF)">
+      <div>
+        <label for="gender">Geschlecht</label>
+        <select id="gender">
+          <option value="">Bitte wählen</option>
+          <option value="männlich">Männlich</option>
+          <option value="weiblich">Weiblich</option>
+          <option value="divers">Divers</option>
+        </select>
+      </div>
 
-  <select id="risk">
-    <option value="">Risikobereitschaft</option>
-    <option value="low">Tief</option>
-    <option value="medium">Mittel</option>
-    <option value="high">Hoch</option>
-  </select>
+      <div>
+        <label for="family">Familienstand</label>
+        <select id="family">
+          <option value="">Bitte wählen</option>
+          <option value="ledig">Ledig</option>
+          <option value="verheiratet">Verheiratet</option>
+          <option value="mit kindern">Mit Kindern</option>
+        </select>
+      </div>
 
-  <input type="number" id="years" placeholder="Anlagehorizont (Jahre)">
+      <div>
+        <label for="living">Wohnsituation</label>
+        <select id="living">
+          <option value="">Bitte wählen</option>
+          <option value="bei eltern">Bei Eltern</option>
+          <option value="allein">Allein</option>
+          <option value="wg">WG</option>
+        </select>
+      </div>
 
-  <button onclick="calculate()">Empfehlung anzeigen</button>
+      <div>
+        <label for="income">Monatliches Einkommen (CHF)</label>
+        <input type="number" id="income" placeholder="z. B. 1200" />
+      </div>
 
-  <div id="result"></div>
-</div>
+      <div>
+        <label for="costs">Monatliche Fixkosten (CHF)</label>
+        <input type="number" id="costs" placeholder="z. B. 400" />
+      </div>
 
-<script>
-function calculate() {
-  let age = document.getElementById("age").value;
-  let save = document.getElementById("save").value;
-  let risk = document.getElementById("risk").value;
-  let years = document.getElementById("years").value;
+      <div>
+        <label for="savings">Sparbetrag pro Monat (CHF)</label>
+        <input type="number" id="savings" placeholder="z. B. 100" />
+      </div>
 
-  let result = "";
+      <div>
+        <label for="assets">Bereits vorhandenes Vermögen (CHF)</label>
+        <input type="number" id="assets" placeholder="z. B. 1000" />
+      </div>
 
-  if (risk === "high" && years >= 5) {
-    result = "👉 Empfehlung: ETF (z. B. MSCI World)\nGute Renditechancen bei langfristiger Anlage.";
-  } 
-  else if (risk === "medium") {
-    result = "👉 Empfehlung: Mischung aus ETF + Sparkonto\nAusgewogen zwischen Risiko und Sicherheit.";
-  } 
-  else {
-    result = "👉 Empfehlung: Sparkonto\nSicher, aber geringere Rendite.";
-  }
+      <div>
+        <label for="risk">Risikobereitschaft</label>
+        <select id="risk">
+          <option value="">Bitte wählen</option>
+          <option value="tief">Tief</option>
+          <option value="mittel">Mittel</option>
+          <option value="hoch">Hoch</option>
+        </select>
+      </div>
 
-  document.getElementById("result").innerText = result;
-}
-</script>
+      <div>
+        <label for="years">Anlagehorizont (Jahre)</label>
+        <input type="number" id="years" placeholder="z. B. 10" />
+      </div>
 
+      <div>
+        <label for="goal">Anlageziel</label>
+        <select id="goal">
+          <option value="">Bitte wählen</option>
+          <option value="vermoegensaufbau">Vermögensaufbau</option>
+          <option value="altersvorsorge">Altersvorsorge</option>
+          <option value="kurzfristiges sparen">Kurzfristiges Sparen</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="experience">Erfahrung mit Investitionen</label>
+        <select id="experience">
+          <option value="">Bitte wählen</option>
+          <option value="keine">Keine</option>
+          <option value="wenig">Wenig</option>
+          <option value="viel">Viel</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="sustainable">Nachhaltig investieren?</label>
+        <select id="sustainable">
+          <option value="">Bitte wählen</option>
+          <option value="ja">Ja</option>
+          <option value="nein">Nein</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="ethics">Ethische Ausschlüsse</label>
+        <select id="ethics">
+          <option value="">Bitte wählen</option>
+          <option value="keine">Keine</option>
+          <option value="waffen">Keine Waffen</option>
+          <option value="oel">Kein Öl</option>
+          <option value="beides">Keine Waffen / kein Öl</option>
+        </select>
+      </div>
+
+      <div class="full">
+        <button onclick="calculateRecommendation()">Empfehlung berechnen</button>
+      </div>
+    </div>
+
+    <div class="result" id="resultBox">
+      <h2>Deine Empfehlung</h2>
+      <div id="resultText"></div>
+    </div>
+
+    <div class="note">
+      Hinweis: Diese WebApp ist ein einfacher Prototyp und ersetzt keine professionelle Finanzberatung.
+    </div>
+  </div>
+
+  <script>
+    function calculateRecommendation() {
+      const age = parseInt(document.getElementById("age").value) || 0;
+      const gender = document.getElementById("gender").value;
+      const family = document.getElementById("family").value;
+      const living = document.getElementById("living").value;
+      const income = parseFloat(document.getElementById("income").value) || 0;
+      const costs = parseFloat(document.getElementById("costs").value) || 0;
+      const savings = parseFloat(document.getElementById("savings").value) || 0;
+      const assets = parseFloat(document.getElementById("assets").value) || 0;
+      const risk = document.getElementById("risk").value;
+      const years = parseInt(document.getElementById("years").value) || 0;
+      const goal = document.getElementById("goal").value;
+      const experience = document.getElementById("experience").value;
+      const sustainable = document.getElementById("sustainable").value;
+      const ethics = document.getElementById("ethics").value;
+
+      const resultBox = document.getElementById("resultBox");
+      const resultText = document.getElementById("resultText");
+
+      if (!age || !income || !savings || !risk || !years || !goal) {
+        resultBox.style.display = "block";
+        resultText.innerText = "Bitte fülle mindestens Alter, Einkommen, Sparbetrag, Risikobereitschaft, Anlagehorizont und Anlageziel aus.";
+        return;
+      }
+
+      let recommendation = "";
+      let portfolio = "";
+      let reason = "";
+      let riskLevel = "";
+
+      const freeMoney = income - costs;
+
+      if (freeMoney < 0) {
+        recommendation = "Momentan ist ein Sparkonto oder Notgroschen sinnvoller als eine risikoreiche Investition.";
+        portfolio = "100 % Sparkonto / Reserve";
+        reason = "Deine Fixkosten sind aktuell höher als dein Einkommen. Deshalb sollte zuerst finanzielle Stabilität aufgebaut werden.";
+        riskLevel = "Tief";
+      } else if (goal === "kurzfristiges sparen" || years < 3 || risk === "tief") {
+        recommendation = "Ein Sparkonto oder eine sehr defensive Lösung passt aktuell am besten.";
+        portfolio = "80 % Sparkonto / 20 % defensiver ETF";
+        reason = "Bei kurzem Anlagehorizont oder tiefer Risikobereitschaft steht Sicherheit stärker im Vordergrund als hohe Rendite.";
+        riskLevel = "Tief";
+      } else if (risk === "mittel" && years >= 3) {
+        recommendation = sustainable === "ja"
+          ? "Eine Mischung aus nachhaltigem ETF und Sparkonto ist passend."
+          : "Eine Mischung aus ETF und Sparkonto ist passend.";
+        portfolio = "60 % ETF / 40 % Sparkonto";
+        reason = "Du suchst ein ausgewogenes Verhältnis zwischen Sicherheit und Renditechancen.";
+        riskLevel = "Mittel";
+      } else if (risk === "hoch" && years >= 5) {
+        recommendation = sustainable === "ja"
+          ? "Ein nachhaltiger ETF-Sparplan ist für dich besonders geeignet."
+          : "Ein ETF-Sparplan ist für dich besonders geeignet.";
+        portfolio = "80 % ETF / 20 % Sparkonto";
+        reason = "Du hast einen längeren Anlagehorizont und bist bereit, Kursschwankungen in Kauf zu nehmen.";
+        riskLevel = "Hoch";
+      } else {
+        recommendation = "Eine ausgewogene Mischung aus ETF und Reservekonto ist sinnvoll.";
+        portfolio = "50 % ETF / 50 % Sparkonto";
+        reason = "Deine Angaben sprechen für einen vorsichtigen, aber sinnvollen Einstieg.";
+        riskLevel = "Mittel";
+      }
+
+      let personalNote = "";
+
+      if (age <= 25) {
+        personalNote += "Du bist noch jung und hast deshalb grundsätzlich mehr Zeit, Kursschwankungen auszugleichen. ";
+      }
+
+      if (family === "mit kindern") {
+        personalNote += "Mit Kindern ist finanzielle Sicherheit besonders wichtig. ";
+      } else if (family === "verheiratet") {
+        personalNote += "Bei gemeinsamer Lebensplanung sollte Sicherheit mitgedacht werden. ";
+      }
+
+      if (living === "bei eltern") {
+        personalNote += "Da du noch bei den Eltern wohnst, sind deine Fixkosten oft tiefer. ";
+      }
+
+      if (experience === "keine") {
+        personalNote += "Da du noch keine Erfahrung mit Investitionen hast, ist ein einfacher ETF oder ein Sparkonto ein guter Einstieg. ";
+      } else if (experience === "viel") {
+        personalNote += "Da du bereits Erfahrung hast, könntest du deine Strategie später noch gezielter ausbauen. ";
+      }
+
+      let sustainabilityNote = "";
+      if (sustainable === "ja") {
+        sustainabilityNote = "Es werden nachhaltige Anlagen bevorzugt, zum Beispiel ESG-ETFs. ";
+      }
+
+      let ethicsNote = "";
+      if (ethics === "waffen") {
+        ethicsNote = "Anlagen in Unternehmen aus dem Bereich Waffen sollen ausgeschlossen werden. ";
+      } else if (ethics === "oel") {
+        ethicsNote = "Anlagen in Unternehmen aus dem Bereich Öl sollen ausgeschlossen werden. ";
+      } else if (ethics === "beides") {
+        ethicsNote = "Anlagen in Unternehmen aus dem Bereich Waffen und Öl sollen ausgeschlossen werden. ";
+      }
+
+      let startSuggestion = "";
+      if (assets >= 1000) {
+        startSuggestion = "Du könntest mit einem Startbetrag aus deinem vorhandenen Vermögen beginnen und zusätzlich monatlich investieren.";
+      } else {
+        startSuggestion = "Ein monatlicher Sparplan ist für dich wahrscheinlich der sinnvollste Einstieg.";
+      }
+
+      const output =
+`Empfehlung:
+${recommendation}
+
+Portfolio-Vorschlag:
+${portfolio}
+
+Risiko-Einschätzung:
+${riskLevel}
+
+Begründung:
+${reason}
+
+Persönliche Einordnung:
+${personalNote}${sustainabilityNote}${ethicsNote}
+
+Startvorschlag:
+${startSuggestion}
+
+Monatlich verfügbar:
+CHF ${freeMoney.toFixed(0)}`;
+
+      resultBox.style.display = "block";
+      resultText.innerText = output;
+    }
+  </script>
 </body>
 </html>
